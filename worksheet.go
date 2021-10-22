@@ -69,6 +69,9 @@ func (w *WorkSheet) parseBof(buf io.ReadSeeker, b *bof, pre *bof, col_pre interf
 	var bts = make([]byte, b.Size)
 	binary.Read(buf, binary.LittleEndian, bts)
 	buf = bytes.NewReader(bts)
+
+  // fmt.Printf("Read bof [0x%0000x]\n", b.Id)
+
 	switch b.Id {
 	// case 0x0E5: //MERGEDCELLS
 	// ws.mergedCells(buf)
@@ -80,10 +83,12 @@ func (w *WorkSheet) parseBof(buf io.ReadSeeker, b *bof, pre *bof, col_pre interf
 		//buf.Seek(int64(b.Size)-2*3, 1)
 		w.rightToLeft = (sheetOptions & 0x40) != 0
 		w.Selected = (sheetOptions & 0x400) != 0
+
 	case 0x208: //ROW
 		r := new(rowInfo)
 		binary.Read(buf, binary.LittleEndian, r)
 		w.addRow(r)
+
 	case 0x0BD: //MULRK
 		mc := new(MulrkCol)
 		size := (b.Size - 6) / 6
@@ -94,6 +99,7 @@ func (w *WorkSheet) parseBof(buf io.ReadSeeker, b *bof, pre *bof, col_pre interf
 		}
 		binary.Read(buf, binary.LittleEndian, &mc.LastColB)
 		col = mc
+
 	case 0x0BE: //MULBLANK
 		mc := new(MulBlankCol)
 		size := (b.Size - 6) / 2
@@ -104,15 +110,20 @@ func (w *WorkSheet) parseBof(buf io.ReadSeeker, b *bof, pre *bof, col_pre interf
 		}
 		binary.Read(buf, binary.LittleEndian, &mc.LastColB)
 		col = mc
+
+  case 0x3:
 	case 0x203: //NUMBER
 		col = new(NumberCol)
 		binary.Read(buf, binary.LittleEndian, col)
+		// fmt.Println("Read number cell: ", col.(*NumberCol).Index)
+
 	case 0x06: //FORMULA
 		c := new(FormulaCol)
 		binary.Read(buf, binary.LittleEndian, &c.Header)
 		c.Bts = make([]byte, b.Size-20)
 		binary.Read(buf, binary.LittleEndian, &c.Bts)
 		col = c
+
 	case 0x207: //STRING = FORMULA-VALUE is expected right after FORMULA
 		if ch, ok := col_pre.(*FormulaCol); ok {
 			c := new(FormulaStringCol)
@@ -125,12 +136,16 @@ func (w *WorkSheet) parseBof(buf io.ReadSeeker, b *bof, pre *bof, col_pre interf
 			}
 			col = c
 		}
+
 	case 0x27e: //RK
 		col = new(RkCol)
 		binary.Read(buf, binary.LittleEndian, col)
+		// fmt.Println("Read RK cell")
+
 	case 0xFD: //LABELSST
 		col = new(LabelsstCol)
 		binary.Read(buf, binary.LittleEndian, col)
+
 	case 0x204:
 		c := new(labelCol)
 		binary.Read(buf, binary.LittleEndian, &c.BlankCol)
@@ -138,9 +153,11 @@ func (w *WorkSheet) parseBof(buf io.ReadSeeker, b *bof, pre *bof, col_pre interf
 		binary.Read(buf, binary.LittleEndian, &count)
 		c.Str, _ = w.wb.get_string(buf, count)
 		col = c
+
 	case 0x201: //BLANK
 		col = new(BlankCol)
 		binary.Read(buf, binary.LittleEndian, col)
+
 	case 0x1b8: //HYPERLINK
 		var hy HyperLink
 		binary.Read(buf, binary.LittleEndian, &hy.CellRange)
@@ -189,16 +206,20 @@ func (w *WorkSheet) parseBof(buf io.ReadSeeker, b *bof, pre *bof, col_pre interf
 		}
 
 		w.addRange(&hy.CellRange, &hy)
+
 	case 0x809:
 		buf.Seek(int64(b.Size), 1)
+
 	case 0xa:
 	default:
 		// log.Printf("Unknow %X,%d\n", b.Id, b.Size)
 		buf.Seek(int64(b.Size), 1)
 	}
+
 	if col != nil {
 		w.add(col)
 	}
+
 	return b, col
 }
 

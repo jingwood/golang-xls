@@ -183,6 +183,10 @@ func (c *NumberCol) String(wb *WorkBook) []string {
 	return []string{strconv.FormatFloat(c.Float, 'f', -1, 64)}
 }
 
+func (c *NumberCol) GetData(wb *WorkBook) float64 {
+  return c.Float
+}
+
 type FormulaStringCol struct {
 	Col
 	RenderedValue string
@@ -217,6 +221,11 @@ type RkCol struct {
 
 func (c *RkCol) String(wb *WorkBook) []string {
 	return []string{c.Xfrk.String(wb)}
+}
+
+func (c *RkCol) GetData(wb *WorkBook) float64 {
+  _, f, _ := c.Xfrk.Rk.number()
+  return f
 }
 
 type LabelsstCol struct {

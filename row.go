@@ -1,5 +1,7 @@
 package goxls
 
+import "fmt"
+
 type rowInfo struct {
 	Index    uint16
 	Fcell    uint16
@@ -40,9 +42,11 @@ func (r *Row) GetData(i int) (float64, bool) {
 	idx := uint16(i)
 
 	if content, ok := r.cols[idx]; ok {
+    
 		data := content.GetData(r.wb)
 		return data, true
   } else {
+    fmt.Println("no content: ", idx, len(r.cols))
 
     // find data from neighbor cell, why do this???
 		// for _, v := range r.cols {
