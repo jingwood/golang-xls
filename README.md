@@ -1,4 +1,4 @@
-# golang-xls
+# goxls
 
 A modified edition of [extrame/xls](https://github.com/extrame/xls)
 

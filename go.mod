@@ -1,4 +1,4 @@
-module goxls
+module github.com/jingwood/goxls
 
 go 1.17
 
