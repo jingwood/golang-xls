@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 import (
 	"encoding/binary"

@@ -1,0 +1,8 @@
+FROM golang
+
+# change to app folder
+RUN mkdir /go/src/app
+WORKDIR /go/src/app
+ADD . /go/src/app
+
+#RUN go get github.com/jingwood/golang-xls

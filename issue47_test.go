@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 import (
 	"io/ioutil"

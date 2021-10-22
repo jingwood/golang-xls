@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 type Xf5 struct {
 	Font      uint16

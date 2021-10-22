@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 type SstInfo struct {
 	Total uint32

@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 import (
 	"fmt"
@@ -60,4 +60,9 @@ func (h *HyperLink) String(wb *WorkBook) []string {
 		res[i] = str
 	}
 	return res
+}
+
+func (h *HyperLink) GetData(wb *WorkBook) float64 {
+	// hyperlink cell doesn't have numeric data
+	return 0
 }

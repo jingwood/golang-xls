@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 type FontInfo struct {
 	Height     uint16

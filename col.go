@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 import (
 	"fmt"
@@ -14,6 +14,7 @@ import (
 //content type
 type contentHandler interface {
 	String(*WorkBook) []string
+  GetData(*WorkBook) float64
 	FirstCol() uint16
 	LastCol() uint16
 }
@@ -50,9 +51,13 @@ type XfRk struct {
 
 func (xf *XfRk) String(wb *WorkBook) string {
 	idx := int(xf.Index)
+
+  // get cell data format
 	if idx < len(wb.Xfs) {
 		fNo := wb.Xfs[idx].formatNo()
-		if fNo >= 164 { // user defined format
+
+    // user defined format
+		if fNo >= 164 { 
 			if formatter := wb.Formats[fNo]; formatter != nil {
 				formatterLower := strings.ToLower(formatter.str)
 				if formatterLower == "general" ||
@@ -75,8 +80,10 @@ func (xf *XfRk) String(wb *WorkBook) string {
 					return yymmdd.Format(t, formatter.str)
 				}
 			}
-			// see http://www.openoffice.org/sc/excelfileformat.pdf Page #174
-		} else if 14 <= fNo && fNo <= 17 || fNo == 22 || 27 <= fNo && fNo <= 36 || 50 <= fNo && fNo <= 58 { // jp. date format
+
+    // see http://www.openoffice.org/sc/excelfileformat.pdf Page #174
+    // jp. date format
+    } else if 14 <= fNo && fNo <= 17 || fNo == 22 || 27 <= fNo && fNo <= 36 || 50 <= fNo && fNo <= 58 {
 			i, f, isFloat := xf.Rk.number()
 			if !isFloat {
 				f = float64(i)
@@ -85,6 +92,7 @@ func (xf *XfRk) String(wb *WorkBook) string {
 			return t.Format(time.RFC3339) //TODO it should be international
 		}
 	}
+
 	return xf.Rk.String()
 }
 

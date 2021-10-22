@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 type rowInfo struct {
 	Index    uint16
@@ -34,6 +34,28 @@ func (r *Row) Col(i int) string {
 	}
 	return ""
 }
+
+// don't care the cell format, just return the numeric data
+func (r *Row) GetData(i int) (float64, bool) {
+	idx := uint16(i)
+
+	if content, ok := r.cols[idx]; ok {
+		data := content.GetData(r.wb)
+		return data, true
+  } else {
+
+    // find data from neighbor cell, why do this???
+		// for _, v := range r.cols {
+		// 	if idx >= v.FirstCol() && idx <= v.LastCol() {
+		// 		data := v.GetData(r.wb)
+		// 		return data[idx - v.FirstCol()], true
+		// 	}
+		// }
+	}
+
+  return 0, false
+}
+
 
 //ColExact Get the Nth Col from the Row, if has not, return nil.
 //For merged cells value is returned for first cell only

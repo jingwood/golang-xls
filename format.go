@@ -1,4 +1,4 @@
-package xls
+package goxls
 
 type Format struct {
 	Head struct {
