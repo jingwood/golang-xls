@@ -50,7 +50,7 @@ type XfRk struct {
 
 func (xf *XfRk) String(wb *WorkBook) string {
 	idx := int(xf.Index)
-	if len(wb.Xfs) > idx {
+	if idx < len(wb.Xfs) {
 		fNo := wb.Xfs[idx].formatNo()
 		if fNo >= 164 { // user defined format
 			if formatter := wb.Formats[fNo]; formatter != nil {
