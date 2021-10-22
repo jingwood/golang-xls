@@ -46,7 +46,7 @@ func (r *Row) GetData(i int) (float64, bool) {
 		data := content.GetData(r.wb)
 		return data, true
   } else {
-    fmt.Println("no content: ", idx, len(r.cols))
+    // fmt.Println("no content: ", idx, len(r.cols))
 
     // find data from neighbor cell, why do this???
 		// for _, v := range r.cols {
