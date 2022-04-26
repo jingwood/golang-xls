@@ -35,8 +35,6 @@ func (r *Row) Col(i int) string {
 	return ""
 }
 
-<<<<<<< Updated upstream
-=======
 // don't care the cell format, just return the numeric data
 func (r *Row) GetData(i int) (interface{}, bool) {
 	idx := uint16(i)
@@ -58,7 +56,6 @@ func (r *Row) GetData(i int) (interface{}, bool) {
 }
 
 
->>>>>>> Stashed changes
 //ColExact Get the Nth Col from the Row, if has not, return nil.
 //For merged cells value is returned for first cell only
 func (r *Row) ColExact(i int) string {
